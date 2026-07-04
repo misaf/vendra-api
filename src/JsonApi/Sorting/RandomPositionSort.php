@@ -19,8 +19,7 @@ final class RandomPositionSort implements SortField
      * Create a new sort field.
      *
      * @param string $name
-     * @param string|null $column
-     * @return RandomProductSort
+     * @return self
      */
     public static function make(string $name): self
     {
