@@ -4,21 +4,13 @@ declare(strict_types=1);
 
 namespace Misaf\VendraApi\Tests;
 
-use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Http;
-use LaravelJsonApi\Encoder\Neomerx\ServiceProvider as LaravelJsonApiEncoderServiceProvider;
-use LaravelJsonApi\Laravel\ServiceProvider as LaravelJsonApiServiceProvider;
-use LaravelJsonApi\Testing\MakesJsonApiRequests;
-use Misaf\VendraFaq\Providers\FaqServiceProvider;
-use Misaf\VendraFaqApi\JsonApi\VendraFaq\Server as VendraFaqServer;
-use Misaf\VendraFaqApi\Providers\FaqApiServiceProvider;
+use Misaf\VendraApi\Providers\ApiServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Override;
 
 abstract class TestCase extends OrchestraTestCase
 {
-    use MakesJsonApiRequests;
-
     #[Override]
     protected function setUp(): void
     {
@@ -41,34 +33,13 @@ abstract class TestCase extends OrchestraTestCase
             'database_connection'                 => null,
         ]);
         $app['config']->set('eloquent-sortable.order_column_name', 'position');
-        $app['config']->set('jsonapi.namespace', 'JsonApi');
-        $app['config']->set('jsonapi.servers.vendra-faq', VendraFaqServer::class);
-    }
-
-    #[Override]
-    protected function defineRoutes($router): void
-    {
-        if ( ! $router instanceof Router) {
-            return;
-        }
-
-        require dirname(__DIR__) . '/routes/api.php';
     }
 
     #[Override]
     protected function getPackageProviders($app): array
     {
         return [
-            LaravelJsonApiEncoderServiceProvider::class,
-            LaravelJsonApiServiceProvider::class,
-            FaqServiceProvider::class,
-            FaqApiServiceProvider::class,
+            ApiServiceProvider::class,
         ];
-    }
-
-    #[Override]
-    protected function defineDatabaseMigrations(): void
-    {
-        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
     }
 }
