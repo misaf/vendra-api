@@ -17,6 +17,10 @@ final class ApiServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        if ( ! $this->app->runningInConsole()) {
+            return;
+        }
+
         AboutCommand::add('Vendra API', fn() => ['Version' => 'dev-master']);
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Misaf\VendraApi\JsonApi\Sorting;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use LaravelJsonApi\Eloquent\Contracts\SortField;
 
 final class RandomPositionSort implements SortField
@@ -15,23 +17,14 @@ final class RandomPositionSort implements SortField
         $this->name = $name;
     }
 
-    /**
-     * Create a new sort field.
-     *
-     * @param string $name
-     * @return self
-     */
     public static function make(string $name): self
     {
         return new static($name);
     }
 
     /**
-     * Apply the sort order to the query.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $direction
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Builder<Model> $query
+     * @return Builder<Model>
      */
     public function sort($query, string $direction = 'asc')
     {
