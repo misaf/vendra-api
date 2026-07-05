@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Misaf\VendraApi\JsonApi\Filters;
 
 use Closure;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use LaravelJsonApi\Core\Support\Str;
 use LaravelJsonApi\Eloquent\Contracts\Filter;
 use LaravelJsonApi\Eloquent\Filters\Concerns\DeserializesValue;
@@ -30,22 +33,14 @@ final class WhereHasInFilter implements Filter
         $this->column = $column ?: $this->guessColumn();
     }
 
-    /**
-     * Create a new filter.
-     *
-     * @param Schema $schema
-     * @param string $fieldName
-     * @param string|null $key
-     * @param string|null $column
-     * @return static
-     */
-    public static function make(Schema $schema, string $fieldName, ?string $key = null, ?string $column = null)
+    public static function make(Schema $schema, string $fieldName, ?string $key = null, ?string $column = null): static
     {
         return new static($schema, $fieldName, $key, $column);
     }
 
     /**
-     * @inheritDoc
+     * @param Builder<Model> $query
+     * @return Builder<Model>
      */
     public function apply($query, $value)
     {
@@ -55,20 +50,21 @@ final class WhereHasInFilter implements Filter
         );
     }
 
-    /**
-     * Get the relation query callback.
-     *
-     * @param mixed $value
-     * @return Closure
-     */
-    protected function callback($value): Closure
+    protected function callback(mixed $value): Closure
     {
-        return function ($query) use ($value): void {
-            $query->whereIn(
-                $query->getModel()->qualifyColumn($this->column()),
-                $this->toArray(collect($value)->first()),
-            );
-        };
+        $first = Arr::first(Arr::wrap($value));
+        $value = is_string($first) || is_array($first) ? $first : null;
+
+        return
+            /**
+             * @param Builder<Model> $query
+             */
+            function (Builder $query) use ($value): void {
+                $query->whereIn(
+                    $query->getModel()->qualifyColumn($this->column()),
+                    $this->toArray($value),
+                );
+            };
     }
 
     private function guessColumn(): string
