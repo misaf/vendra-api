@@ -42,7 +42,7 @@ final class WhereHasInFilter implements Filter
      * @param Builder<Model> $query
      * @return Builder<Model>
      */
-    public function apply($query, $value)
+    public function apply($query, $value): Builder
     {
         return $query->whereHas(
             $this->relationName(),

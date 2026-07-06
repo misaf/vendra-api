@@ -26,9 +26,11 @@ final class RandomPositionSort implements SortField
      * @param Builder<Model> $query
      * @return Builder<Model>
      */
-    public function sort($query, string $direction = 'asc')
+    public function sort($query, string $direction = 'asc'): Builder
     {
-        return $query->inRandomOrder();
+        $query->inRandomOrder();
+
+        return $query;
     }
 
     public function sortField(): string
