@@ -1,6 +1,6 @@
 ---
 name: vendra-api-development
-description: "Use this skill when creating, modifying, reviewing, or testing the Vendra API infrastructure module in app-modules/vendra-api. Trigger for shared JSON:API filters, sorters, reusable query building blocks, and API service-provider wiring consumed by the per-domain vendra-*-api modules."
+description: "Use this skill when creating, modifying, reviewing, or testing the Vendra API infrastructure module in packages/vendra-api. Trigger for shared JSON:API filters, sorters, reusable query building blocks, and API service-provider wiring consumed by the per-domain vendra-*-api modules."
 ---
 
 # Vendra API
@@ -11,7 +11,7 @@ Always use this skill together with `modular` for module structure, `laravel-bes
 
 ## Module Boundary
 
-Treat `app-modules/vendra-api` as shared JSON:API infrastructure, not a domain API.
+Treat `packages/vendra-api` as shared JSON:API infrastructure, not a domain API.
 
 - Use namespace `Misaf\VendraApi`.
 - Keep only cross-cutting, reusable JSON:API building blocks here: `JsonApi/Filters`, `JsonApi/Sorting`, and API service-provider wiring.
@@ -28,5 +28,5 @@ Treat `app-modules/vendra-api` as shared JSON:API infrastructure, not a domain A
 
 - Keep tests purposeful: cover filter/sorter behavior and edge cases, not framework internals.
 - Keep Pest architecture tests in `tests/ArchTest.php`: the `php`, `security`, and `laravel` presets, plus `arch()->expect('Misaf\VendraApi')->not->toUse('Misaf\VendraTenant')`.
-- Run module checks: `composer --working-dir=app-modules/vendra-api test` and `composer --working-dir=app-modules/vendra-api analyse`.
+- Run module checks: `composer --working-dir=packages/vendra-api test` and `composer --working-dir=packages/vendra-api analyse`.
 - If PHP files changed, run `vendor/bin/pint --dirty --format agent`.
